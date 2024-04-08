@@ -1,0 +1,5 @@
+flask
+pyspark
+openai
+langchain
+langchain_experimental
