@@ -3,3 +3,4 @@ pyspark
 openai
 langchain
 langchain_experimental
+langchain-openai

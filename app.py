@@ -1,7 +1,6 @@
-from flask import Flask, request
+from flask import Flask, request, json
 from querybot import QueryBot
 import os
-from pyspark.sql import SparkSession
 
 app = Flask(__name__)
 
@@ -13,17 +12,20 @@ queryBot = QueryBot(openai_api_key)
 
 @app.route("/query", methods=['GET', 'POST'])
 def app_response():
-    answer = ""
+    respose_dict = {}
+    
     query_json = request.get_json()
-    print(query_json)
-    question = str(query_json['question'])#.encode("utf-8")
-    print(question, type(question))
+    userQuery = str(query_json['question'])#.encode("utf-8")
+    
+    respose_dict['userQuery'] = userQuery
 
     if request.method == 'POST' or request.method == 'GET':
-        answer = queryBot.get_response(question)
-        # answer = 'This is answer to : ' + question
-        
-    return answer
+        agent_response = queryBot.get_response(userQuery)
+        respose_dict['result'] = agent_response
+
+    app.logger.info(agent_response)
+
+    return json.dumps(respose_dict), {'Content-Type': 'application/json'}
 
 
 if __name__ == "__main__":
